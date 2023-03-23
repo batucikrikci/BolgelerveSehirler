@@ -1,0 +1,58 @@
+﻿@model List<SelectListItem>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="d-flex align-items-baseline">
+    <label for="bolgeler" class="form-label me-2">Bölge</label>
+    <select id="bolgeler" asp-items="Model" class="form-select">
+        <option value="">Seçiniz</option>
+    </select>
+</div>
+
+
+<table class="table d-none">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Şehir</th>
+            <th>Nufüs</th>
+        </tr>
+    </thead>
+
+</table>
+
+@section Scripts {
+
+    <script>
+        $("#bolgeler").change(bolgeDegisti);
+
+        function bolgeDegisti() {
+            let id = $(this).val();
+            let url = "@Url.Action("SehirleriGetir","Home")";
+
+            if (id) {
+                $.get(url, { bolgeId: id }, function (data) {
+                    $("#sehirler").removeClass("d-none");
+                    $("#sehirler > tbody").html("");
+                    for (const sehir of data) {
+                        $("#sehirler > tbody").append(
+                            `<tr>
+                                            <td>${sehir.id}</td>
+                                            <td>${sehir.sehirAd}</td>
+                                            <td>${sehir.nufus}</td>
+                                         <tr>`
+
+
+
+                        );
+                    }
+                });
+            }
+            else {
+                $("#sehirler").addClass("d-none");
+            }
+
+        }
+    </script>
+}
